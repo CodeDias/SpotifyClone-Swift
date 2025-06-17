@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - botaonav Class
-
+// Uma subclasse de UIButton para estilização customizada de botões.
 class botaonav: UIButton {
 
     // MARK: - Initialization
@@ -26,26 +26,28 @@ class botaonav: UIButton {
     // MARK: - Setup
 
     private func setupButton() {
-        // Estilização básica
+        // Estilização básica do botão
         backgroundColor = .systemBlue // Cor de fundo padrão
         setTitleColor(.white, for: .normal) // Cor do texto
         titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold) // Fonte do texto
 
         // Configurações de borda e arredondamento
-        layer.cornerRadius = 13 // Raio de arredondamento (15 pontos)
-        layer.masksToBounds = true // Crucial para cortar o conteúdo ao raio
-        layer.borderWidth = 1 // Largura da borda (1 ponto)
+        layer.cornerRadius = 13 // Raio de arredondamento
+        layer.masksToBounds = true // Essencial para cortar o conteúdo ao raio
+        layer.borderWidth = 1 // Largura da borda
         layer.borderColor = UIColor.black.cgColor // Cor da borda
     }
 
-    // Você pode adicionar métodos para configurar texto ou outras propriedades
+    // MARK: - Configuration
+    
+    // Método para configurar o título do botão
     func configure(withTitle title: String) {
         setTitle(title, for: .normal)
     }
 }
 
 // MARK: - ImagemFooter Class
-
+// Uma subclasse de UIImageView para estilização customizada de imagens de rodapé.
 class ImagemFooter: UIImageView {
 
     // MARK: - Initialization
@@ -63,14 +65,12 @@ class ImagemFooter: UIImageView {
     // MARK: - Setup
 
     private func setupImage() {
-        // Configura corner radius para a imagem
-        layer.cornerRadius = 10 // Raio de arredondamento, ajuste conforme necessário
+        // Configura o corner radius para a imagem
+        layer.cornerRadius = 7 // Raio de arredondamento
         layer.masksToBounds = true // Essencial para cortar o conteúdo ao raio
-
-        // Opcional: Adicionar uma borda à imagem
-        layer.borderWidth = 1 // Largura da borda (1 ponto)
-        layer.borderColor = UIColor.lightGray.cgColor // Cor da borda
     }
+
+    // MARK: - Configuration
 
     // Método para configurar a imagem
     func configure(withImage image: UIImage?) {
@@ -78,35 +78,61 @@ class ImagemFooter: UIImageView {
     }
 }
 
-// MARK: - MyViewController Class
+// MARK: - imgcard Class
+// Uma nova subclasse de UIImageView para estilização de imagens como "cards".
+class imgcard: UIImageView {
 
+    // MARK: - Initialization
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupImageCard()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupImageCard()
+    }
+
+    // MARK: - Setup
+
+    private func setupImageCard() {
+        // Configura o corner radius para a imagem do card
+        layer.cornerRadius = 10 // Exemplo: 10 pontos de arredondamento
+        layer.masksToBounds = true // Essencial para cortar o conteúdo ao raio
+        
+    }
+
+    // MARK: - Configuration
+
+    // Método para configurar a imagem
+    func configure(withImage image: UIImage?) {1
+        self.image = image
+    }
+}
+
+// MARK: - MyViewController Class
+// O principal controlador de visualização do seu aplicativo.
 class MyViewController: UIViewController {
 
     // MARK: - IBOutlets
 
-    // 1. Crie um @IBOutlet para o seu botão do Storyboard
-    // No Main.storyboard:
-    // - Arraste um UIButton para o seu ViewController.
-    // - No Identity Inspector (terceiro ícone à direita), mude a classe para 'botaonav'.
-    // - Arraste do círculo ao lado de 'meuBotaoDoStoryboard' para o botão no Storyboard para conectar.
+    // Conecte esses outlets do Storyboard arrastando do círculo para os elementos correspondentes.
+    @IBOutlet weak var myProgressView: UIProgressView! // Este é o OUTLET, a instância vem do Storyboard.
     @IBOutlet weak var meuBotaoDoStoryboard: botaonav!
-
-    // 2. Crie um @IBOutlet para a sua imagem do Storyboard (se aplicável)
-    // No Main.storyboard:
-    // - Arraste um UIImageView para o seu ViewController.
-    // - No Identity Inspector, mude a classe para 'ImagemFooter'.
-    // - Arraste do círculo ao lado de 'minhaImagemDoStoryboard' para a imagem no Storyboard para conectar.
     @IBOutlet weak var minhaImagemDoStoryboard: ImagemFooter!
+    @IBOutlet weak var minhaNovaImagemCard: imgcard! // Conecte essa imagem à classe 'imgcard' no Storyboard!
+
 
     // MARK: - View Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemGray5 // Apenas para ter um fundo visível
+        // Define a cor de fundo do controlador de visualização
+        view.backgroundColor = .systemGray5
 
-        // MARK: - Usando botaonav Programaticamente
+        // MARK: - Configurando botaonav Programaticamente
 
-        // Passamos 'frame: .zero' porque estamos usando Auto Layout
         let meuBotaoProgramatico = botaonav(frame: .zero)
         meuBotaoProgramatico.configure(withTitle: "Botão do Código")
         meuBotaoProgramatico.translatesAutoresizingMaskIntoConstraints = false // Essencial para Auto Layout
@@ -117,20 +143,18 @@ class MyViewController: UIViewController {
         NSLayoutConstraint.activate([
             meuBotaoProgramatico.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             meuBotaoProgramatico.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
-            meuBotaoProgramatico.widthAnchor.constraint(equalToConstant: 250), // Aumentei a largura para 250
+            meuBotaoProgramatico.widthAnchor.constraint(equalToConstant: 250),
             meuBotaoProgramatico.heightAnchor.constraint(equalToConstant: 50)
         ])
 
-        // MARK: - Usando botaonav do Storyboard
+        // MARK: - Configurando botaonav do Storyboard
 
-        // Se o @IBOutlet 'meuBotaoDoStoryboard' foi conectado corretamente no Storyboard,
-        // ele já virá com a estilização definida na classe 'botaonav'.
-        // Você só precisa configurar o título e adicionar uma ação, se quiser.
+        // O botão já vem estilizado pela classe 'botaonav'.
         meuBotaoDoStoryboard.configure(withTitle: "Botão do Storyboard")
         meuBotaoDoStoryboard.addTarget(self, action: #selector(botaoStoryboardTapped), for: .touchUpInside) // Adiciona ação
 
-        // Exemplo de como posicionar o botão do Storyboard (se você não tiver constraints no Storyboard)
-        // Se você já tem constraints no Storyboard, não precisa disso.
+        // Posiciona o botão do Storyboard (se você não tiver constraints já no Storyboard)
+        meuBotaoDoStoryboard.translatesAutoresizingMaskIntoConstraints = false // Essencial se estiver adicionando constraints aqui
         NSLayoutConstraint.activate([
             meuBotaoDoStoryboard.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             meuBotaoDoStoryboard.topAnchor.constraint(equalTo: meuBotaoProgramatico.bottomAnchor, constant: 20),
@@ -138,48 +162,103 @@ class MyViewController: UIViewController {
             meuBotaoDoStoryboard.heightAnchor.constraint(equalToConstant: 50)
         ])
 
-        // MARK: - Usando ImagemFooter Programaticamente
+        // MARK: - Configurando ImagemFooter Programaticamente
 
-        // Passamos 'frame: .zero' porque estamos usando Auto Layout
         let minhaImagemProgramatica = ImagemFooter(frame: .zero)
-        // Usando a imagem "333"
-        minhaImagemProgramatica.configure(withImage: UIImage(named: "333"))
+        minhaImagemProgramatica.configure(withImage: UIImage(named: "333")) // Certifique-se de ter uma imagem "333" no Asset Catalog
         minhaImagemProgramatica.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(minhaImagemProgramatica)
 
         NSLayoutConstraint.activate([
             minhaImagemProgramatica.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             minhaImagemProgramatica.topAnchor.constraint(equalTo: meuBotaoDoStoryboard.bottomAnchor, constant: 20),
-            minhaImagemProgramatica.widthAnchor.constraint(equalToConstant: 100), // Largura da imagem
-            minhaImagemProgramatica.heightAnchor.constraint(equalToConstant: 100) // Altura da imagem
+            minhaImagemProgramatica.widthAnchor.constraint(equalToConstant: 100),
+            minhaImagemProgramatica.heightAnchor.constraint(equalToConstant: 100)
         ])
 
-        // MARK: - Usando ImagemFooter do Storyboard
+        // MARK: - Configurando ImagemFooter do Storyboard
 
-        // Se o @IBOutlet 'minhaImagemDoStoryboard' foi conectado corretamente no Storyboard,
-        // ele já virá com a estilização definida na classe 'ImagemFooter' (com o cornerRadius).
-        // Você só precisa configurar a imagem.
-        // Usando a imagem "333"
-        minhaImagemDoStoryboard.configure(withImage: UIImage(named: "333"))
+        // A imagem já vem estilizada pela classe 'ImagemFooter'.
+        minhaImagemDoStoryboard.configure(withImage: UIImage(named: "333")) // Use a mesma imagem ou outra
 
-        // Exemplo de como posicionar a imagem do Storyboard (se você não tiver constraints no Storyboard)
+        // Posiciona a imagem do Storyboard (se você não tiver constraints já no Storyboard)
+        minhaImagemDoStoryboard.translatesAutoresizingMaskIntoConstraints = false // Essencial se estiver adicionando constraints aqui
         NSLayoutConstraint.activate([
             minhaImagemDoStoryboard.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             minhaImagemDoStoryboard.topAnchor.constraint(equalTo: minhaImagemProgramatica.bottomAnchor, constant: 20),
             minhaImagemDoStoryboard.widthAnchor.constraint(equalToConstant: 100),
             minhaImagemDoStoryboard.heightAnchor.constraint(equalToConstant: 100)
         ])
+        
+        // MARK: - Configurando UIProgressView do Storyboard (CORREÇÃO AQUI!)
+        // Não crie uma nova instância. Use a que veio do Storyboard pelo @IBOutlet.
+        
+        myProgressView.progress = 0.7 // 70% completo
+        myProgressView.progressTintColor = .systemGreen // Cor da barra preenchida
+        myProgressView.trackTintColor = .systemGray // Cor da trilha vazia
+        
+        // **IMPORTANTE**: Se a altura da UIProgressView não estiver correta,
+        // **verifique as constraints dela diretamente no Storyboard**.
+        // É a forma mais garantida de controlar a altura.
+        // Se você não tiver uma constraint de altura definida no Storyboard,
+        // as linhas abaixo tentarão aplicá-la programaticamente.
+        // Certifique-se de que não haja conflitos.
+        myProgressView.translatesAutoresizingMaskIntoConstraints = false // Necessário se adicionar constraints aqui
+        NSLayoutConstraint.activate([
+            myProgressView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            myProgressView.topAnchor.constraint(equalTo: minhaImagemDoStoryboard.bottomAnchor, constant: 40),
+            myProgressView.widthAnchor.constraint(equalToConstant: 300),
+            myProgressView.heightAnchor.constraint(equalToConstant: 5) // Altura menor para a UIProgressView
+        ])
+
+
+        // MARK: - Configurando imgcard do Storyboard
+
+        // Certifique-se de que o UIImageView no Storyboard está com a classe customizada 'imgcard'
+        // e conectado ao @IBOutlet minhaNovaImagemCard.
+        minhaNovaImagemCard.configure(withImage: UIImage(named: "seuNomeDeImagemAqui")) // Substitua "seuNomeDeImagemAqui" pela sua imagem desejada
+        
+        // Posiciona a imagem do Storyboard (se você não tiver constraints já no Storyboard)
+        minhaNovaImagemCard.translatesAutoresizingMaskIntoConstraints = false // Essencial se estiver adicionando constraints aqui
+        NSLayoutConstraint.activate([
+            minhaNovaImagemCard.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            minhaNovaImagemCard.topAnchor.constraint(equalTo: myProgressView.bottomAnchor, constant: 20),
+            minhaNovaImagemCard.widthAnchor.constraint(equalToConstant: 150), // Largura da imagem
+            minhaNovaImagemCard.heightAnchor.constraint(equalToConstant: 150) // Altura da imagem
+        ])
+
+        // MARK: - Configurando imgcard Programaticamente (Opcional)
+
+        let minhaImagemCardProgramatica = imgcard(frame: .zero)
+        minhaImagemCardProgramatica.configure(withImage: UIImage(named: "outraImagem")) // Use outra imagem se quiser
+        minhaImagemCardProgramatica.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(minhaImagemCardProgramatica)
+
+        NSLayoutConstraint.activate([
+            minhaImagemCardProgramatica.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            minhaImagemCardProgramatica.topAnchor.constraint(equalTo: minhaNovaImagemCard.bottomAnchor, constant: 20),
+            minhaImagemCardProgramatica.widthAnchor.constraint(equalToConstant: 120),
+            minhaImagemCardProgramatica.heightAnchor.constraint(equalToConstant: 120)
+        ])
+    }
+    
+    // MARK: - Estilo da Barra de Status (Horário Branco)
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        // Define o horário, ícones de Wi-Fi, bateria etc. como branco.
+        // Certifique-se de que "View controller-based status bar appearance" no Info.plist esteja como YES.
+        return .lightContent
     }
 
     // MARK: - Button Actions
 
     @objc func botaoProgramaticoTapped() {
         print("Botão criado programaticamente foi clicado!")
-        // Adicione aqui a lógica que você quer para este botão
+        // Adicione aqui a lógica específica para este botão
     }
 
     @objc func botaoStoryboardTapped() {
         print("Botão do Storyboard foi clicado!")
-        // Adicione aqui a lógica que você quer para este botão
+        // Adicione aqui a lógica específica para este botão
     }
 }
